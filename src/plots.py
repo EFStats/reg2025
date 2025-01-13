@@ -113,18 +113,6 @@ def tripleplot(df: pd.core.frame.DataFrame,
     axes.flat[3].set_visible(False)
 
 
-    ###############
-    # Annotations #
-    ###############
-     
-    annot    = \
-f'''Nothing to see here yet.
-For questions, contact @GermanCoyote.'''
-    axes.flat[3].annotate(text     = annot,
-                          xy       = (0.005, 0.005),
-                          xycoords = 'figure fraction',
-                          fontsize = s/3)
-
     # Export
     plt.savefig(fname       = "./out/Fig1.svg",
                 bbox_inches = "tight")
