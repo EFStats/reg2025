@@ -37,8 +37,8 @@ jobs:
         timestamp=$(date -u)
         git commit -m "Latest data and plot: ${timestamp}" && git push
         
-    #- name: load key
-    #  run: echo "${{ secrets.KEY }}" > key && chmod 600 key
+    - name: load key
+      run: echo "${{ secrets.KEY }}" > key && chmod 600 key
       
-    #- name: git pull on host
-    #  run: ssh -i key -oStrictHostKeyChecking=no ${{ secrets.USER }}@${{ vars.HOST }} "cd ${{ vars.PATH }} && git fetch --all && git reset --hard origin/main"
+    - name: git pull on host
+      run: ssh -i key -oStrictHostKeyChecking=no ${{ secrets.USER }}@${{ vars.HOST }} "cd ${{ vars.PATH }} && git fetch --all && git reset --hard origin/main"
