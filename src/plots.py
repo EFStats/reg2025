@@ -81,7 +81,6 @@ def read_parse_input(filename: str = "./data/log.txt") -> pd.core.frame.DataFram
     return df
 
 
-
 def daywise(df: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
     ''' Calculate day-wise count'''
 
@@ -100,29 +99,200 @@ def daywise(df: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
     return out
 
 
-def tripleplot(df: pd.core.frame.DataFrame,
-               df_last: pd.core.frame.DataFrame) -> None:
-        
-    # Prepare figure
+def makeplots(df: pd.core.frame.DataFrame,
+              df_last: pd.core.frame.DataFrame) -> None:
+
+    ##################        
+    # Prepare figure #
+    ##################
+
     s = 20
     fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = (15,15))
     plt.subplots_adjust(hspace = .3, wspace=.3)
-    axes.flat[0].set_visible(False)
-    axes.flat[1].set_visible(False)
-    axes.flat[2].set_visible(False)
-    axes.flat[3].set_visible(False)
+    for ax in axes.flat:
+        ax.set_visible(False)
+
+    #############
+    # Left plot #
+    #############
+
+    ax           = axes.flat[0]
+    ax.set_visible(True)
+
+    df["totals"] = df.new + df.approved + df.partial + df.paid + df.checkedin
+    
+    # Comment in this block and change colours of the
+    # other lines, once people can check in on-site
+    #ax.plot(df.CurrentDateTimeUtc,
+    #        df.checkedin,
+    #        c      = efgreen,
+    #        lw     = 2,
+    #        marker = "",
+    #        label  = "Checked in")
+    
+    ax.plot(df.CurrentDateTimeUtc,
+            df.totals,
+            c      = efgreen,
+            lw     = 2,
+            marker = "",
+            label  = "Total")
+    ax.plot(df.CurrentDateTimeUtc,
+            df.paid + df.partial + df.checkedin,
+            c      = eflightgreen,
+            lw     = 2,
+            marker = "",
+            label  = "Paid (incl. partial)")
+
+    # x axis
+    ax.set_xlabel(xlabel   = "Time",
+                  fontsize = s,
+                  labelpad = 10)
+    
+    ax.set_xticks([datetime.date(2025, 1, 1),
+                   datetime.date(2025, 2, 1),
+                   datetime.date(2025, 3, 1),
+                   datetime.date(2025, 4, 1),
+                   datetime.date(2025, 5, 1),
+                   datetime.date(2025, 6, 1),
+                   datetime.date(2025, 7, 1),
+                   datetime.date(2025, 8, 1),
+                   datetime.date(2025, 9, 1)
+                  ])
+    ax.set_xticklabels(["Jan", "Feb", "Mar", "Apr",
+                        "May", "Jun", "Jul", "Aug",
+                        "Sep"])
+
+    ax.tick_params(axis      = "x",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    
+    ax.set_xlim([datetime.date(2025, 1, 1),
+                 datetime.date(2025, 3, 1)]) # target: 3rd Sept (2025, 9, 3)
+
+    # y axis
+    ax.set_ylabel(ylabel = "Count",
+                  fontsize = s,
+                  labelpad = 10)
+    ax.set_yticks([0, 1000, 2000, 3000, 4000])
+    ax.hlines(y      = [1000 * i for i in range(50)],
+              xmin   = datetime.date(2025, 1, 1),
+              xmax   = datetime.date(2025, 10, 1),
+              colors = "lightgrey",
+              ls     = "-",
+              lw     = 0.5)
+    ax.tick_params(axis      = "y",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    ax.set_ylim((0, 4000))
+    
+    # Legend
+    ax.legend(loc      = 9,
+              fontsize = 15,
+              ncols    = 2,
+              frameon  = False)
 
 
-    # Export
+    ##############
+    # Right plot #
+    ##############
+
+    ax = axes.flat[1]
+    ax.set_visible(True)
+    nb_normal = df.iloc[-1,:].normal
+    nb_spons  = df.iloc[-1,:].sponsor
+    nb_super  = df.iloc[-1,:].supersponsor
+    
+    ax.barh(y     = 0,
+            width = nb_normal,
+            color = eflightergreen,
+            label = "Normal")
+    ax.barh(y     = 0,
+            width = nb_spons,
+            left  = nb_normal,
+            color = eflightgreen,
+            label = "Sponsor")
+    ax.barh(y     = 0,
+            width = nb_super,
+            left  = nb_normal + nb_spons,
+            color = efgreen,
+            label = "Supersponsor")
+    
+    
+    # x axis
+    ax.set_xlabel(xlabel   = "Count",
+                  fontsize = s,
+                  labelpad = 10)
+    ax.tick_params(axis      = "x",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    ax.set_xlim((0, 3000))
+ 
+    # y axis
+    ax.set_ylabel(ylabel  = "")
+    ax.set_ylim((-1.5, 1.5))
+    ax.set_yticks([])
+    
+    # Legend
+    ax.legend(loc      = 9,
+              fontsize = 15,
+              ncols    = 2,
+              frameon  = False)
+
+    ###############
+    # Annotations #
+    ###############
+    
+    last     = str(df.CurrentDateTimeUtc.tolist()[-1]).split(".")[0]
+ 
+    annot    = \
+f'''Last update {last} (UTC).
+For questions, contact @GermanCoyote.'''
+    ax.annotate(text     = annot,
+                xy       = (0.005, 0.005),
+                xycoords = 'figure fraction',
+                fontsize = s/3)
+
+    # Upper-left plots
+    new       = df.new.tolist()[-1]
+    approved  = df.approved.tolist()[-1]
+    partial   = df.partial.tolist()[-1]
+    paid      = df.paid.tolist()[-1]
+    checkedin = df.checkedin.tolist()[-1]
+    total     = new + approved + partial + paid + checkedin
+    annot     = \
+f'''{total} total regs, out of which {partial + paid} paid at least partially.'''
+    axes.flat[0].annotate(text     = annot,
+                          xy       = (0.005, 0.005),
+                          xycoords = 'axes fraction',
+                          fontsize = s/3)
+
+
+    # Upper-right plots
+    total    = nb_normal + nb_spons + nb_super
+    annot    = \
+f'''{total} total regs ({nb_normal} normal, {nb_spons} sponsors, {nb_super} supersponsors).'''
+    axes.flat[1].annotate(text     = annot,
+                          xy       = (0.005, 0.005),
+                          xycoords = 'axes fraction',
+                          fontsize = s/3)
+
+
+    #################    
+    # Export figure #
+    #################
+
     plt.savefig(fname       = "./out/Fig1.svg",
                 bbox_inches = "tight")
 
 
 if __name__ == "__main__":
     # This year's data, from our own logger
-    # ef2024 = read_parse_input()
+    ef2024 = read_parse_input()
     
-    # Last year's data
+    # Last year's data: TODO
     # ef2023 = read_parse_input("./data/log2024.txt")
     
-    tripleplot(None, None)
+    makeplots(ef2024, None)
