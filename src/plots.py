@@ -81,7 +81,8 @@ def read_parse_input(filename: str = "./data/log.txt") -> pd.core.frame.DataFram
     return df
 
 
-def daywise(df: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
+def daywise(df: pd.core.frame.DataFrame,
+    offset: int) -> pd.core.frame.DataFrame:
     ''' Calculate day-wise count'''
 
     # Working copy
@@ -94,7 +95,7 @@ def daywise(df: pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
     
     # Add day index, shifted by offset of three,
     # s.t. day 0 is the day of reg opening
-    out["idx"] = np.arange(0, len(out)) - 3
+    out["idx"] = np.arange(0, len(out)) - offset
 
     return out
 
@@ -241,6 +242,59 @@ def makeplots(df: pd.core.frame.DataFrame,
               ncols    = 2,
               frameon  = False)
 
+
+    ####################
+    # Bottom-left plot #
+    ####################
+        
+    # We need daywise data for the bottom-left plot
+    df_daywise      = daywise(df, offset = 33)
+    df_last_daywise = daywise(df_last, offset = 3)
+    
+    # Set up plot and plot the two time-courses
+    ax = axes.flat[2]
+    ax.set_visible(True)
+    ax.plot(df_daywise.idx,
+            df_daywise.TotalCount,
+            lw     = 2,
+            c      = efgreen,
+            label  = "2025",
+            zorder = 100)
+    ax.plot(df_last_daywise.idx,
+            df_last_daywise.TotalCount,
+            lw    = 2,
+            c     = eflightgreen,
+            label = "2024")
+    ax.vlines([200], 0, 10000, color = "grey", ls=":", label = "EF 2025 Begins")
+
+    
+    # x axis
+    ax.set_xlabel(xlabel   = "Day After Reg Opening",
+                  fontsize = s,
+                  labelpad = 10)
+    ax.tick_params(axis      = "x",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    ax.set_xlim((-5, 250))
+ 
+    # y axis
+    ax.set_ylabel(ylabel  = "Total Regs",
+                 fontsize = s,
+                 labelpad = 10)
+    ax.tick_params(axis      = "y",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    ax.set_ylim((0, 6000))
+    
+    # Legend
+    ax.legend(loc      = 2,
+              fontsize = 15,
+              ncols    = 1,
+              frameon  = False)
+
+
     ###############
     # Annotations #
     ###############
@@ -279,7 +333,6 @@ f'''{total} total regs ({nb_normal} normal, {nb_spons} sponsors, {nb_super} supe
                           xycoords = 'axes fraction',
                           fontsize = s/3)
 
-
     #################    
     # Export figure #
     #################
@@ -293,6 +346,6 @@ if __name__ == "__main__":
     ef2024 = read_parse_input()
     
     # Last year's data: TODO
-    # ef2023 = read_parse_input("./data/log2024.txt")
+    ef2023 = read_parse_input("./data/log2024.txt")
     
-    makeplots(ef2024, None)
+    makeplots(ef2024, ef2023)
