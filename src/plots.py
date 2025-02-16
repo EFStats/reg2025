@@ -169,7 +169,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    pad       = 10)
     
     ax.set_xlim([datetime.date(2025, 1, 1),
-                 datetime.date(2025, 3, 1)]) # target: 3rd Sept (2025, 9, 3)
+                 datetime.date(2025, 4, 1)]) # target: 3rd Sept (2025, 9, 3)
 
     # y axis
     ax.set_ylabel(ylabel = "Count",
@@ -229,7 +229,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax.set_xlim((0, 3000))
+    ax.set_xlim((0, 4000))
  
     # y axis
     ax.set_ylabel(ylabel  = "")
