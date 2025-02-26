@@ -175,7 +175,7 @@ def makeplots(df: pd.core.frame.DataFrame,
     ax.set_ylabel(ylabel = "Count",
                   fontsize = s,
                   labelpad = 10)
-    ax.set_yticks([0, 1000, 2000, 3000, 4000])
+    ax.set_yticks([0, 1000, 2000, 3000, 4000, 5000])
     ax.hlines(y      = [1000 * i for i in range(50)],
               xmin   = datetime.date(2025, 1, 1),
               xmax   = datetime.date(2025, 10, 1),
