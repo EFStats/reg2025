@@ -186,7 +186,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax.set_ylim((0, 4000))
+    ax.set_ylim((0, 5000))
     
     # Legend
     ax.legend(loc      = 9,
@@ -229,7 +229,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax.set_xlim((0, 4000))
+    ax.set_xlim((0, 5000))
  
     # y axis
     ax.set_ylabel(ylabel  = "")
