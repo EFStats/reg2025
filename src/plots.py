@@ -175,7 +175,7 @@ def makeplots(df: pd.core.frame.DataFrame,
     ax.set_ylabel(ylabel = "Count",
                   fontsize = s,
                   labelpad = 10)
-    ax.set_yticks([0, 1000, 2000, 3000, 4000, 5000, 6000])
+    ax.set_yticks([0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
     ax.hlines(y      = [1000 * i for i in range(50)],
               xmin   = datetime.date(2025, 1, 1),
               xmax   = datetime.date(2025, 10, 1),
@@ -186,7 +186,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax.set_ylim((0, 6000))
+    ax.set_ylim((0, 7000))
     
     # Legend
     ax.legend(loc      = 9,
@@ -229,7 +229,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax.set_xlim((0, 6000))
+    ax.set_xlim((0, 7000))
  
     # y axis
     ax.set_ylabel(ylabel  = "")
@@ -286,7 +286,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax.set_ylim((0, 6000))
+    ax.set_ylim((0, 7000))
     
     # Legend
     ax.legend(loc      = 2,
