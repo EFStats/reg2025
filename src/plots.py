@@ -229,6 +229,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
+    ax.set_xticks([0, 3500, 7000])
     ax.set_xlim((0, 7000))
  
     # y axis
