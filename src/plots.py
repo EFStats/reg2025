@@ -124,22 +124,22 @@ def makeplots(df: pd.core.frame.DataFrame,
     
     # Comment in this block and change colours of the
     # other lines, once people can check in on-site
-    #ax.plot(df.CurrentDateTimeUtc,
-    #        df.checkedin,
-    #        c      = efgreen,
-    #        lw     = 2,
-    #        marker = "",
-    #        label  = "Checked in")
+    ax.plot(df.CurrentDateTimeUtc,
+            df.checkedin,
+            c      = efgreen,
+            lw     = 2,
+            marker = "",
+            label  = "Checked in")
     
     ax.plot(df.CurrentDateTimeUtc,
             df.totals,
-            c      = efgreen,
+            c      = eflightgreen,
             lw     = 2,
             marker = "",
             label  = "Total")
     ax.plot(df.CurrentDateTimeUtc,
             df.paid + df.partial + df.checkedin,
-            c      = eflightgreen,
+            c      = eflightergreen,
             lw     = 2,
             marker = "",
             label  = "Paid (incl. partial)")
@@ -295,6 +295,79 @@ def makeplots(df: pd.core.frame.DataFrame,
               ncols    = 1,
               frameon  = False)
 
+    #####################
+    # Bottom-right plot #
+    #####################
+
+    ax           = axes.flat[3]
+    
+    ax.plot(df.CurrentDateTimeUtc,
+            df.checkedin,
+            c      = efgreen,
+            lw     = 2,
+            marker = "",
+            label  = "Checked in")
+
+    # x axis
+    ax.set_xlabel(xlabel   = "Date",
+                  fontsize = s,
+                  labelpad = 10)
+    
+    ax.set_xticks([datetime.date(2025, 9, 2),
+                  datetime.date(2025, 9, 3),
+                  datetime.date(2025, 9, 4),
+                  datetime.date(2025, 9, 5),
+                  datetime.date(2025, 9, 6),
+                  datetime.date(2025, 9, 7)])
+    ax.set_xticklabels(["2nd", "3rd", "4th", "5th", "6th", "7th"])
+
+    ax.tick_params(axis      = "x",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    
+    ax.set_xlim([datetime.date(2025, 9, 2),
+                 datetime.date(2025, 9, 7)])
+
+    # y axis
+    ax.set_ylabel(ylabel = "Checked In",
+                  fontsize = s,
+                  labelpad = 10)
+    ax.set_yticks([0, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
+    ax.hlines(y      = [1000 * i for i in range(50)],
+              xmin   = datetime.date(2025, 9, 2),
+              xmax   = datetime.date(2025, 9, 7),
+              colors = "lightgrey",
+              ls     = "-",
+              lw     = 0.5)
+    ax.tick_params(axis      = "y",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    ax.set_ylim((0, 7000))
+
+    # Another y axis
+    ax2 = ax.twinx()
+    ax2.set_ylabel(ylabel = "Check-In Rate [Regs / min]",
+                  fontsize = s,
+                  labelpad = 10)
+    ax2.tick_params(axis      = "y",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    ax2.set_ylim([0, 15])
+    ax2.yaxis.label.set_color('C0')
+    ax2.spines['right'].set_color('C0')
+    ax2.tick_params(axis='y', colors='C0')
+
+    df.delta_checkins = df.checkedin.rolling(window=2).apply(lambda x: x.iloc[1] - x.iloc[0])
+    df.delta_min      = df.CurrentDateTimeUtc.astype(int).rolling(window=2).apply(lambda x: x.iloc[1] - x.iloc[0]) / 1e9 / 60
+    df.checkinrate    = df.delta_checkins / df.delta_min
+    ax2.plot(df.CurrentDateTimeUtc,
+            df.checkinrate,
+            c      = "C0",
+            lw     = 2,
+            marker = "")
 
     ###############
     # Annotations #
