@@ -300,6 +300,7 @@ def makeplots(df: pd.core.frame.DataFrame,
     #####################
 
     ax           = axes.flat[3]
+    ax.set_visible(True)
     
     ax.plot(df.CurrentDateTimeUtc,
             df.checkedin,
@@ -347,28 +348,27 @@ def makeplots(df: pd.core.frame.DataFrame,
     ax.set_ylim((0, 7000))
 
     # Another y axis
-    if False:
-        ax2 = ax.twinx()
-        ax2.set_ylabel(ylabel = "Check-In Rate [Regs / min]",
-                      fontsize = s,
-                      labelpad = 10)
-        ax2.tick_params(axis      = "y",
-                       which     = "both",
-                       labelsize = s,
-                       pad       = 10)
-        ax2.set_ylim([0, 20])
-        ax2.yaxis.label.set_color('C0')
-        ax2.spines['right'].set_color('C0')
-        ax2.tick_params(axis='y', colors='C0')
-    
-        df.delta_checkins = df.checkedin.rolling(window=2).apply(lambda x: x.iloc[1] - x.iloc[0])
-        df.delta_min      = df.CurrentDateTimeUtc.astype(int).rolling(window=2).apply(lambda x: x.iloc[1] - x.iloc[0]) / 1e9 / 60
-        df.checkinrate    = df.delta_checkins / df.delta_min
-        ax2.plot(df.CurrentDateTimeUtc,
-                df.checkinrate,
-                c      = "C0",
-                lw     = 2,
-                marker = "")
+    ax2 = ax.twinx()
+    ax2.set_ylabel(ylabel = "Check-In Rate [Regs / min]",
+                  fontsize = s,
+                  labelpad = 10)
+    ax2.tick_params(axis      = "y",
+                   which     = "both",
+                   labelsize = s,
+                   pad       = 10)
+    ax2.set_ylim([0, 20])
+    ax2.yaxis.label.set_color('C0')
+    ax2.spines['right'].set_color('C0')
+    ax2.tick_params(axis='y', colors='C0')
+
+    df.delta_checkins = df.checkedin.rolling(window=2).apply(lambda x: x.iloc[1] - x.iloc[0])
+    df.delta_min      = df.CurrentDateTimeUtc.astype(int).rolling(window=2).apply(lambda x: x.iloc[1] - x.iloc[0]) / 1e9 / 60
+    df.checkinrate    = df.delta_checkins / df.delta_min
+    ax2.plot(df.CurrentDateTimeUtc,
+            df.checkinrate,
+            c      = "C0",
+            lw     = 2,
+            marker = "")
 
     ###############
     # Annotations #
