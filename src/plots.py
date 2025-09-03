@@ -355,7 +355,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax2.set_ylim([0, 15])
+    ax2.set_ylim([0, 20])
     ax2.yaxis.label.set_color('C0')
     ax2.spines['right'].set_color('C0')
     ax2.tick_params(axis='y', colors='C0')
@@ -391,7 +391,7 @@ For questions, contact @GermanCoyote.'''
     checkedin = df.checkedin.tolist()[-1]
     total     = new + approved + partial + paid + checkedin
     annot     = \
-f'''{total} total regs, out of which {partial + paid} paid at least partially.'''
+f'''{total} total regs, out of which {partial + paid} paid at least partially. Checked-in: {checkedin}.'''
     axes.flat[0].annotate(text     = annot,
                           xy       = (0.005, 0.005),
                           xycoords = 'axes fraction',
@@ -401,7 +401,7 @@ f'''{total} total regs, out of which {partial + paid} paid at least partially.''
     # Upper-right plots
     total    = nb_normal + nb_spons + nb_super
     annot    = \
-f'''{total} total regs ({nb_normal} normal, {nb_spons} sponsors, {nb_super} supersponsors).'''
+f'''{total} total paid regs ({nb_normal} normal, {nb_spons} sponsors, {nb_super} supersponsors).'''
     axes.flat[1].annotate(text     = annot,
                           xy       = (0.005, 0.005),
                           xycoords = 'axes fraction',
