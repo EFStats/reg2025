@@ -356,7 +356,7 @@ def makeplots(df: pd.core.frame.DataFrame,
                    which     = "both",
                    labelsize = s,
                    pad       = 10)
-    ax2.set_ylim([0, 20])
+    ax2.set_ylim([0, 30])
     ax2.yaxis.label.set_color('C0')
     ax2.spines['right'].set_color('C0')
     ax2.tick_params(axis='y', colors='C0')
